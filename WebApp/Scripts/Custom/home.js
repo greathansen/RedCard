@@ -11,11 +11,7 @@ home = {
             cache: true,
             cacheLength: 60
         }).done(function (data) {
-            if (data.StackTrace) {
-                alert(data.StackTrace);
-            } else {
-                createDiagnosticChart(data);
-            }
+            
         }).fail(function (error) {
             alert(error.responseText);
         }).always(function () {

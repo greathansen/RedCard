@@ -110,6 +110,7 @@
     <Compile Include="Controllers\Api\PositionController.cs" />
     <Compile Include="Controllers\Api\TeamController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TeamController.cs" />
     <Compile Include="Daos\DataAccess.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -126,6 +127,9 @@
     <Content Include="Views\Shared.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-2.1.1.min.map" />
+    <Content Include="Views\Team\Create.cshtml" />
+    <Content Include="Views\Team\Details.cshtml" />
+    <Content Include="Views\Team\List.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

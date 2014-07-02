@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using WebApp.Models;
@@ -11,6 +12,7 @@ namespace WebApp.Daos
 {
     public static class DataAccess<T> where T : AbstractIdentificable, new()
     {
+        //TODO: Refactor example apply here
         public static List<T> Get(int? id)
         {
             var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["RedCard"].ConnectionString);
@@ -73,8 +75,7 @@ namespace WebApp.Daos
                 };
 
                 connection.Open();
-
-                cmd.Transaction.Commit();
+                cmd.ExecuteNonQuery();
             }
             catch (Exception e)
             {
@@ -109,15 +110,23 @@ namespace WebApp.Daos
         static string CreateInsertCommand(T entity)
         {
             var command = new StringBuilder();
-            command.AppendFormat("insert into {0} ", entity.GetType().Name);
-            command.Append("values (");
-            // string values = "";
+            command.AppendFormat("insert into {0} (", entity.GetType().Name);
+           
+            string values = "";
+
             foreach (PropertyInfo propertyInfo in entity.GetType().GetProperties())
             {
-                // command.AppendLine(propertyInfo.Name);
-                command.AppendFormat("'{0}'", propertyInfo.GetValue(entity));
+                if (!propertyInfo.CustomAttributes.Any() &&
+                    propertyInfo.GetCustomAttribute(typeof (IdentityAttribute)) == null)
+                {
+                    command.AppendFormat("{0},", propertyInfo.Name);
+                    values += string.Format("'{0}',", propertyInfo.GetValue(entity));
+                }
             }
-
+            command.Remove(command.Length - 1,1);
+          //  values.Remove(values.Length - 1);
+            command.Append(") values (");
+            command.Append(values.Remove(values.Length - 1) + ")");
             return command.ToString();
         }
 
